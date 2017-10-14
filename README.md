@@ -1,4 +1,4 @@
 # Natural Computing
-Currently, the following algorithms were implemented:
- BBPSO
- GA with standard mutation
+### Currently, the following algorithms are implemented:
+* BBPSO
+* GA with standard mutation
