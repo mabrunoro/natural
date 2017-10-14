@@ -20,7 +20,8 @@
 # end for
 
 class bfgsa():
-	def __init__(self)
+	def __init__(self):
+		print('Creating BFGSA object')
 
 def main():
 	return 0;
