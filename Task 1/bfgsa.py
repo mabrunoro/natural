@@ -24,11 +24,21 @@ def make(inp):
 		return t
 	return cluster
 
-class bfgsa():
+class Population:
 	def __init__(self):
 		print('Creating BFGSA object')
 
-def main():
+# it: number of iterations
+# npop: number of masses
+# mn: floor value of masses
+# mx: ceil value of masses
+# k: number of clusters
+# d: number of dimensions
+def bfgsa(it=100,npop=15,mn=-1,mx=1,k=1,d=1,fun):
+	print('BFGSA:\n\tPopulation size:',npop)
+	print('\tNumber of iterations:',it)
+
+def main(filename,k):
 	inp = []
 	with open(filename) as fil:
 		# lines = fil.readlines()
@@ -39,11 +49,11 @@ def main():
 	for it in inp:
 		mn = [ it[j] if it[j] < mn[j] else mn[j] for j in range(len(inp[0])) ]
 		mx = [ it[j] if it[j] > mn[j] else mn[j] for j in range(len(inp[0])) ]
-		result = bfgsa()
-		if((result[1] < 0) or (result[0] < 0)):
-			print('Error: result')
-		else:
-			print(result[1])
+	result = bfgsa()
+	if((result[1] < 0) or (result[0] < 0)):
+		print('Error: result')
+	else:
+		print(result[1])
 	return 0;
 
 if(__name__ == '__main__'):
