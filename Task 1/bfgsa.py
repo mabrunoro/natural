@@ -74,14 +74,20 @@ class Population:
 		def objective(self):
 			err = 0
 			for i in self.centroids:
+				siz = len(i[1])
 				cen = i[1][0][:]
 				t = len(cen)
 				for j in i[1][1:]:
 					for k in range(t):
 						cen[k] = cen[k] + j[k]
-				cen = [ k/t for k in cen ]
+				cen = [ k/siz for k in cen ]
+				# print('cen:',cen)
+				# if(cen[0] > 10):
+				# 	print(i)
+				# 	sys.exit(0)
 				for j in i[1]:
 					err = err + euclidian(cen, j)
+			# print(err)
 			return err
 
 		# generates the agent's mass
@@ -120,10 +126,24 @@ class Population:
 		def calcvel(self):
 			self.velocity = [ [ random.random() * self.velocity[i][j] + self.acceleration[i][j] for j in range(self.d) ] for i in range(self.k) ]
 
-		def calcpos(self,data):
+		def calcpos(self,data,mn,mx):
 			for i in range(self.k):
 				for j in range(self.d):
 					self.centroids[i][0][j] = self.centroids[i][0][j] + self.velocity[i][j]
+					# while(self.centroids[i][0][j] < mn[j]):
+					# 	if(self.velocity[i][j] > 0):
+					# 		self.centroids[i][0][j] = self.centroids[i][0][j] + self.velocity[i][j]/10
+					# 	elif(self.velocity[i][j] < 0):
+					# 		self.centroids[i][0][j] = self.centroids[i][0][j] - self.velocity[i][j]/10
+					# 	else:
+					# 		break
+					# while(self.centroids[i][0][j] > mx[j]):
+					# 	if(self.velocity[i][j] > 0):
+					# 		self.centroids[i][0][j] = self.centroids[i][0][j] - self.velocity[i][j]/10
+					# 	elif(self.velocity[i][j] < 0):
+					# 		self.centroids[i][0][j] = self.centroids[i][0][j] + self.velocity[i][j]/10
+					# 	else:
+					# 		break
 			self.clusterize(data)
 
 	def __init__(self,data,npop,mn,mx,k,d):
@@ -133,6 +153,8 @@ class Population:
 		for i in range(npop):
 			self.population.append(self.Agent(data=data,mn=mn,mx=mx,k=k,d=d))
 		self.bindfit = self.population[0].fitness
+		self.mn = mn
+		self.mx = mx
 		# self.extremes()
 		# self.calcmasses()
 
@@ -190,7 +212,17 @@ class Population:
 
 	def calcposs(self,data):
 		for i in self.population:
-			i.calcpos(data=data)
+			i.calcpos(data=data,mn=self.mn,mx=self.mx)
+
+	def avoidstagnancy(self):
+		for i in self.population:
+			distances = [ (i.calcdistance(j),j) for j in self.population if i != j ]
+			distances.sort(key=lambda x: x[0], reverse=False)
+			r = random.random()*2 - 1
+			for j in range(i.k):
+				for k in range(i.d):
+					for l in range(7):
+						i.centroids[j][0][k] = i.centroids[j][0][k] + (r * distances[l][1][j][0][k] / 7)
 
 # it: number of iterations
 # npop: number of masses
@@ -199,17 +231,23 @@ class Population:
 # k: number of clusters
 # d: number of dimensions
 def bfgsa(datav,it=100,npop=15,mn=-1,mx=1,k=1,d=1):
-	print('BFGSA:\n\tPopulation size:',npop)
-	print('\tNumber of iterations:',it)
+	# print('BFGSA:\n\tPopulation size:',npop)
+	# print('\tNumber of iterations:',it)
 	# Step 1
 	alg = Population(data=datav,npop=npop,mn=mn,mx=mx,k=k,d=d)
+	# print(mn)
+	# print(mx)
 	# for i in alg.population:
 	# 	print(i.fitness,i.mass)
 	# print(alg.bind.fitness)
 	# print(alg.wind.fitness)
+	stagnant = 0
+	prevbfit = alg.bindfit
 	for i in range(it):
 		# print(alg.bindfit)
-		print(alg.population[0].centroids[0][0])
+		# print(alg.population[0].centroids[0][0])
+		# print(alg.population[0].force)
+		# print(alg.population[0].velocity)
 
 		# Step 2
 		alg.calcfits()
@@ -219,12 +257,21 @@ def bfgsa(datav,it=100,npop=15,mn=-1,mx=1,k=1,d=1):
 		alg.calcmasses()
 
 		# Step 4
-		alg.calcforces(it=i,al=0.01,nit=it,go=1,ep=0.01)
+		alg.calcforces(it=i,al=0.05,nit=it,go=10,ep=0.01)
 		alg.calcaccs()
 
 		# Step 5
 		alg.calcvels()
 		alg.calcposs(datav)
+
+		# Step 6
+		if(prevbfit == alg.bindfit):
+			stagnant = stagnant + 1
+		else:
+			stagnant = 0
+		if(stagnant >= 4):
+			alg.avoidstagnancy()
+			stagnant = 0
 
 	return alg.bindfit
 
