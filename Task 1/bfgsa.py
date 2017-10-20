@@ -31,11 +31,35 @@ class Population:
 			print('Initializing agent')
 			# creates centroids with room for data vector
 			self.centroids = [ [ [ random.uniform(mn[i],mx[i]) for i in range(d) ] , [] ] for j in range(k) ]
+			# # copies data vector
+			# indata = data[:]
+			# # get closest data from vector to populate all centroids (everyone must have at least one)
+			# for i in self.centroids:
+			# 	i[1].append(closest(indata,i[0],True)[0])
+			# # append the rest of the data to the closest centroid set
+			# for i in indata:
+			# 	p = (self.centroids[0], euclidian(i, self.centroids[0][0]))
+			# 	for j in self.centroids[1:]:
+			# 		r = euclidian(i, j[0])
+			# 		if(r < p[1]):
+			# 			p = (j, r)
+			# 	p[0][1].append(i)
+			self.clusterize(data)
+			self.fitness = self.objective()
+			self.mass = 0
+			self.force = None
+			self.k = k
+			self.d = d
+			self.velocity = [ [ 0 for i in range(self.d) ] for j in range(self.k) ]
+
+		# get the sets
+		def clusterize(self,indata):
 			# copies data vector
 			indata = data[:]
 			# get closest data from vector to populate all centroids (everyone must have at least one)
 			for i in self.centroids:
-				i[1].append(closest(indata,i[0],True)[0])
+				i[1] = [closest(indata,i[0],True)[0]]
+				# i[1].append(closest(indata,i[0],True)[0])
 			# append the rest of the data to the closest centroid set
 			for i in indata:
 				p = (self.centroids[0], euclidian(i, self.centroids[0][0]))
@@ -44,13 +68,8 @@ class Population:
 					if(r < p[1]):
 						p = (j, r)
 				p[0][1].append(i)
-			self.fitness = self.objective()
-			self.mass = 0
-			self.force = None
-			self.k = k
-			self.d = d
-			self.velocity = [ [ 0 for i in range(self.d) ] for j in range(self.k) ]
 
+		# objective function
 		def objective():
 			err = 0
 			for i in self.centroids:
@@ -100,7 +119,11 @@ class Population:
 		def calcvel(self):
 			self.velocity = [ [ random.random() * self.velocity[i][j] + self.acceleration[i][j] for j in self.d ] for i in self.k ]
 
-		def calcpos(self):
+		def calcpos(self,data):
+			for i in range(self.k):
+				for j in range(self.d):
+					self.centroids[i][0][j] = self.centroids[i][0][j] + self.velocity[i][j]
+			self.clusterize(data)
 
 	def __init__(self,npop,mn,mx,k,d):
 		print('Creating BFGSA objects')
@@ -162,9 +185,12 @@ class Population:
 # mx: ceil value of masses
 # k: number of clusters
 # d: number of dimensions
-def bfgsa(it=100,npop=15,mn=-1,mx=1,k=1,d=1,fun):
+def bfgsa(it=100,npop=15,mn=-1,mx=1,k=1,d=1,datav):
 	print('BFGSA:\n\tPopulation size:',npop)
 	print('\tNumber of iterations:',it)
+	alg = Population(npop=npop,mn=mn,mx=mx,k=k,d=d)
+	# for i in range(it):
+	# 	;
 
 def main(filename,k):
 	inp = []
