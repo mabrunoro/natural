@@ -4,6 +4,7 @@ import sys
 import math
 import random
 import math
+import copy
 
 def euclidian(a,b):
 	s = 0
@@ -28,7 +29,7 @@ class Population:
 	# mn and mx are minimum and maximum values for each direction
 	class Agent:
 		def __init__(self,data,mn,mx,k=3,d=2):
-			print('Initializing agent')
+			# print('Initializing agent')
 			# creates centroids with room for data vector
 			self.centroids = [ [ [ random.uniform(mn[i],mx[i]) for i in range(d) ] , [] ] for j in range(k) ]
 			# # copies data vector
@@ -45,7 +46,7 @@ class Population:
 			# 			p = (j, r)
 			# 	p[0][1].append(i)
 			self.clusterize(data)
-			self.fitness = self.objective()
+			self.fitness = 10000000
 			self.mass = 0
 			self.force = None
 			self.k = k
@@ -53,7 +54,7 @@ class Population:
 			self.velocity = [ [ 0 for i in range(self.d) ] for j in range(self.k) ]
 
 		# get the sets
-		def clusterize(self,indata):
+		def clusterize(self,data):
 			# copies data vector
 			indata = data[:]
 			# get closest data from vector to populate all centroids (everyone must have at least one)
@@ -70,7 +71,7 @@ class Population:
 				p[0][1].append(i)
 
 		# objective function
-		def objective():
+		def objective(self):
 			err = 0
 			for i in self.centroids:
 				cen = i[1][0][:]
@@ -93,7 +94,7 @@ class Population:
 			s = 0
 			for i in range(self.k):
 				for j in range(self.d):
-					s = s + (self.centroids[i][0][j] - obj[i][0][j])*(self.centroids[i][0][j] - obj[i][0][j])
+					s = s + (self.centroids[i][0][j] - obj.centroids[i][0][j])*(self.centroids[i][0][j] - obj.centroids[i][0][j])
 			return math.sqrt(s)
 
 		# calculates the force between two masses
@@ -114,10 +115,10 @@ class Population:
 			self.force = rforce
 
 		def calcacc(self):
-			self.acceleration = [ list(map(lambda x: x/self.mass,i)) for i in self.force ]
+			self.acceleration = [ list(map(lambda x: x/(self.mass+0.01),i)) for i in self.force ]
 
 		def calcvel(self):
-			self.velocity = [ [ random.random() * self.velocity[i][j] + self.acceleration[i][j] for j in self.d ] for i in self.k ]
+			self.velocity = [ [ random.random() * self.velocity[i][j] + self.acceleration[i][j] for j in range(self.d) ] for i in range(self.k) ]
 
 		def calcpos(self,data):
 			for i in range(self.k):
@@ -125,22 +126,26 @@ class Population:
 					self.centroids[i][0][j] = self.centroids[i][0][j] + self.velocity[i][j]
 			self.clusterize(data)
 
-	def __init__(self,npop,mn,mx,k,d):
+	def __init__(self,data,npop,mn,mx,k,d):
 		print('Creating BFGSA objects')
 		self.population = []
 		self.size = npop
 		for i in range(npop):
-			self.population.append(Agent(data=data,mn=mn,mx=mx,k=k,d=d))
-		self.bind = self.population[0]
-		self.extremes()
-		self.calcmasses()
+			self.population.append(self.Agent(data=data,mn=mn,mx=mx,k=k,d=d))
+		self.bindfit = self.population[0].fitness
+		# self.extremes()
+		# self.calcmasses()
+
+	def calcfits(self):
+		for i in self.population:
+			i.fitness = i.objective()
 
 	# updates best and worst individuals
 	def extremes(self):
 		self.wind = self.population[0]
 		for i in self.population[1:]:
-			if(i.fitness < self.bind.fitness):
-				self.bind = i
+			if(i.fitness < self.bindfit):
+				self.bindfit = i.fitness
 			if(i.fitness > self.wind.fitness):
 				self.wind = i
 
@@ -179,18 +184,49 @@ class Population:
 		for i in self.population:
 			i.calcacc()
 
+	def calcvels(self):
+		for i in self.population:
+			i.calcvel()
+
+	def calcposs(self,data):
+		for i in self.population:
+			i.calcpos(data=data)
+
 # it: number of iterations
 # npop: number of masses
 # mn: floor value of masses
 # mx: ceil value of masses
 # k: number of clusters
 # d: number of dimensions
-def bfgsa(it=100,npop=15,mn=-1,mx=1,k=1,d=1,datav):
+def bfgsa(datav,it=100,npop=15,mn=-1,mx=1,k=1,d=1):
 	print('BFGSA:\n\tPopulation size:',npop)
 	print('\tNumber of iterations:',it)
-	alg = Population(npop=npop,mn=mn,mx=mx,k=k,d=d)
-	# for i in range(it):
-	# 	;
+	# Step 1
+	alg = Population(data=datav,npop=npop,mn=mn,mx=mx,k=k,d=d)
+	# for i in alg.population:
+	# 	print(i.fitness,i.mass)
+	# print(alg.bind.fitness)
+	# print(alg.wind.fitness)
+	for i in range(it):
+		# print(alg.bindfit)
+		print(alg.population[0].centroids[0][0])
+
+		# Step 2
+		alg.calcfits()
+		alg.extremes()
+
+		# Step 3
+		alg.calcmasses()
+
+		# Step 4
+		alg.calcforces(it=i,al=0.01,nit=it,go=1,ep=0.01)
+		alg.calcaccs()
+
+		# Step 5
+		alg.calcvels()
+		alg.calcposs(datav)
+
+	return alg.bindfit
 
 def main(filename,k):
 	inp = []
@@ -203,18 +239,17 @@ def main(filename,k):
 	for it in inp:
 		mn = [ it[j] if it[j] < mn[j] else mn[j] for j in range(len(inp[0])) ]
 		mx = [ it[j] if it[j] > mn[j] else mn[j] for j in range(len(inp[0])) ]
-	result = bfgsa()
-	if((result[1] < 0) or (result[0] < 0)):
-		print('Error: result')
-	else:
-		print(result[1])
-	return 0;
+
+	result = bfgsa(datav=inp,it=10*k*len(inp[0]),npop=3*k*len(inp[0]),mn=mn,mx=mx,k=k,d=len(inp[0]))
+	print(result)
+
+	return 0
 
 if(__name__ == '__main__'):
 	if(len(sys.argv) < 3):
 		print('Usage: ./bfgsa datafile number_of_clusters')
 	else:
-		return main(sys.argv[1],int(sys.argv[2]))
+		main(sys.argv[1],int(sys.argv[2]))
 
 # Define initial parameters.
 # Initialize each agent with K random cluster centers
