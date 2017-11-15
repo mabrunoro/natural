@@ -1,0 +1,53 @@
+[System]
+Name='car'
+Type='mamdani'
+Version=2.0
+NumInputs=2
+NumOutputs=1
+NumRules=9
+AndMethod='min'
+OrMethod='max'
+ImpMethod='min'
+AggMethod='max'
+DefuzzMethod='centroid'
+
+[Input1]
+Name='x'
+Range=[-5 5]
+NumMFs=5
+MF1='nb':'gaussmf',[1.5 -5]
+MF2='nm':'gaussmf',[1 -2.132]
+MF3='ze':'gaussmf',[1 -0.05291]
+MF4='pb':'gaussmf',[1 4.577]
+MF5='pm':'gaussmf',[1 2.455]
+
+[Input2]
+Name='v'
+Range=[-5 5]
+NumMFs=5
+MF1='nb':'gaussmf',[1.062 -5]
+MF2='nm':'gaussmf',[1.062 -2.5]
+MF3='ze':'gaussmf',[1.062 0]
+MF4='pm':'gaussmf',[1.062 2.5]
+MF5='pb':'gaussmf',[1.062 4.974]
+
+[Output1]
+Name='f'
+Range=[-5 5]
+NumMFs=5
+MF1='nb':'gaussmf',[1.062 -5]
+MF2='nm':'gaussmf',[1.062 -2.5]
+MF3='ze':'gaussmf',[1.062 -2.776e-017]
+MF4='pm':'gaussmf',[1.062 2.5]
+MF5='pb':'gaussmf',[1.062 5]
+
+[Rules]
+1 3, 5 (1) : 1
+2 3, 5 (1) : 1
+4 3, 1 (1) : 1
+5 3, 1 (1) : 1
+3 1, 5 (1) : 1
+3 2, 4 (1) : 1
+3 3, 3 (1) : 1
+3 4, 2 (1) : 1
+3 5, 1 (1) : 1

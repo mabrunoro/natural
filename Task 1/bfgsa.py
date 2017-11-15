@@ -147,7 +147,7 @@ class Population:
 			self.clusterize(data)
 
 	def __init__(self,data,npop,mn,mx,k,d):
-		print('Creating BFGSA objects')
+		# print('Creating BFGSA objects')
 		self.population = []
 		self.size = npop
 		for i in range(npop):
@@ -231,23 +231,14 @@ class Population:
 # k: number of clusters
 # d: number of dimensions
 def bfgsa(datav,it=100,npop=15,mn=-1,mx=1,k=1,d=1):
-	# print('BFGSA:\n\tPopulation size:',npop)
-	# print('\tNumber of iterations:',it)
+	
 	# Step 1
 	alg = Population(data=datav,npop=npop,mn=mn,mx=mx,k=k,d=d)
-	# print(mn)
-	# print(mx)
-	# for i in alg.population:
-	# 	print(i.fitness,i.mass)
-	# print(alg.bind.fitness)
-	# print(alg.wind.fitness)
+
 	stagnant = 0
 	prevbfit = alg.bindfit
+
 	for i in range(it):
-		# print(alg.bindfit)
-		# print(alg.population[0].centroids[0][0])
-		# print(alg.population[0].force)
-		# print(alg.population[0].velocity)
 
 		# Step 2
 		alg.calcfits()
@@ -297,23 +288,3 @@ if(__name__ == '__main__'):
 		print('Usage: ./bfgsa datafile number_of_clusters')
 	else:
 		main(sys.argv[1],int(sys.argv[2]))
-
-# Define initial parameters.
-# Initialize each agent with K random cluster centers
-# for Iteration_count=1 to maximum_iterations do
-# for all agents i do
-# for all pattern Xp in the dataset do
-# calculate Euclidean distance of Xp with all cluster centroids;
-# assign Xp to the cluster that have nearest centroid to Xp end for
-# calculate the fitness function; calculate Gbest and Gworst;
-# calculate mass value for all agents
-# calculate the acceleration and velocity of agents based on Eq. (29) and Eq.(30);
-# calculate the position of each agent
-# if stagnant_count > STAGNANT_NUM % check if stagnation has occurred for minimization problem
-# call the process of collective response of position change
-# End
-# end for
-# find the global best position
-# update the cluster centroids according to velocity updating
-# and coordinate updating formula of GSA
-# end for
