@@ -107,7 +107,7 @@ pheromone = None
 # kmeans is the kmeans function
 # qo is probability to choose the cluster with maximum pheromone concentration
 # ls is the percentage of itens to be chosen as top solutions
-# pot is persistence of trail
+# pot is evaporation rate of trail
 def acok(it,R,K,n,N,objective,kmeans,qo=0.98,ls=0.2,pot=0.1):
 	S = []
 	bestind = None
