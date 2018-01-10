@@ -35,11 +35,6 @@ def make(inp,k,n):
     # kmeans function
     # S is an agent's solution string
 	def kmeans(S):
-		# clusters = [ [] for i in range(k) ]
-        # # assign the data to the correspondent cluster for each element in the solution string S
-		# for i in range(len(a)):
-		# 	clusters[a[i]].append(inp[i])
-
         # calculate each cluster center
         # sums up
 		centers = kcenters(S)
@@ -150,7 +145,8 @@ def acok(it,R,K,n,N,objective,kmeans,qo=0.98,ls=0.2,pot=0.1):
 
     # start iterations
 	for iteration in range(it):
-		# print(iteration,it)
+		if(iteration % 10 == 0):
+			print(iteration,it)
 		S = []
 		for i in range(R):
 			aux = []

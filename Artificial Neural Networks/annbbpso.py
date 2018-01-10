@@ -95,8 +95,8 @@ def main(filename1,filename2,filename3,nhid,plotall=True):
 	# print( bbpso(10*nhid*len(inp1[0]),3*nhid*len(inp1[0]),nhid,makeevalerr(inp1,inp2)) )
 	if(plotall):
 		plt.figure()
-	for i in range(10):
-		(bind,convergence) = bbpso(256,16,nhid,makeevalerr(inp1,inp2))
+	for i in range(20):
+		(bind,convergence) = bbpso(160,40,nhid,makeevalerr(inp1,inp2))
 		if((gbind is None) or (bind.fitness < gbind.fitness)):
 			gbind = bind
 			gconvergence = convergence
@@ -107,7 +107,8 @@ def main(filename1,filename2,filename3,nhid,plotall=True):
 	# if(plotall):
 		# plt.show()
 	plt.figure()
-	plt.scatter(inp1+inp3,list(map(gbind.evaluation,inp1+inp3)),s=1)
+	# plt.scatter(inp1+inp3,list(map(gbind.evaluation,inp1+inp3)),s=1)
+	plt.scatter(inp3,list(map(gbind.evaluation,inp3)),s=1)
 	# plt.show()
 
 	plt.figure()
@@ -120,7 +121,7 @@ def main(filename1,filename2,filename3,nhid,plotall=True):
 if(__name__ == '__main__'):
 	if(len(sys.argv) < 3):
 		print('Usage: ./annbbpso x_training y_training x_test hidden_neurons')
-		main('x_treinamento.txt','y_treinamento.txt','x_teste.txt',4,False)
+		main('x_treinamento.txt','y_treinamento.txt','x_teste.txt',10,False)
 	else:
 		main(sys.argv[1],sys.argv[2],sys.argv[3],int(sys.argv[4]))
 

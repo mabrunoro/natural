@@ -183,7 +183,7 @@ def ga(it,npop=15,mn=-50,mx=50,k=1,d=1,fun=euclidian):
 	# print('\tnumber of iterations =',it)
 	pop = Population(npop,mn,mx,k,d,fun)
 	for i in range(it):
-		pop.selection(ps=0.95)
+		pop.selection()
 		pop.crossover(pc=0.5, fun=fun)
 		pop.mutation(pm=0.1, fun=fun)
 	# return (bpos,bfit)

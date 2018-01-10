@@ -1,0 +1,24 @@
+macthome:Ants Colony Optimization mthome$ ./acok.py ../BasesDeDados/cancer.data 2
+1: 2984,8956180092505
+2: 2984,8956180092505
+3: 2984,8956180092505
+4: 2984,8956180092505
+macthome:Ants Colony Optimization mthome$ ./acok.py ../BasesDeDados/cancer.data 2
+1: 2984,8956180092505
+2: 2984,8956180092505
+3: 2984,8956180092505
+4: 2984,8956180092505
+5: 2984,8956180092505
+6: 2984,8956180092505
+macthome:Ants Colony Optimization mthome$ ./acok.py ../BasesDeDados/cancer.data 2
+1: 2984,8956180092505
+2: 2984,8956180092505
+3: 2984,8956180092505macthome:Ants Colony Optimization mthome$ ./acok.py ../BasesDeDados/cancer.data 2
+1: 2984,8956180092505
+2: 2984,8956180092505
+3: 2984,8956180092505
+4: 2984,8956180092505
+5: 2984,8956180092505
+6: 2984,8956180092505
+7: 2984,8956180092505
+macthome:Ants Colony Optimization mthome$ 

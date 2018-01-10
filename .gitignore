@@ -1,5 +1,6 @@
 .DS_Store
 *.pdf
+*.png
 *.rar
 *.zip
 *.7z
@@ -10,3 +11,4 @@
 
 slprj*
 *.pages
+*.numbers

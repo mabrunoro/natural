@@ -1,0 +1,69 @@
+Last login: Tue Jan  9 12:43:47 on ttys000
+macthome:Ants Colony Optimization mthome$ cd ../Artificial\ Neural\ Networks/
+macthome:Artificial Neural Networks mthome$ ls
+Convergence.png						SIG- AULA 9-RNA-introd.pdf				test.py
+Function.png						SIG- AULA 9_RNA_Perceptron - 2.pdf			x_teste.txt
+NC-Exercicio computacional - redes neurais - 2017-2.pdf	Tutorial RNA MATLAB.pdf					x_treinamento.txt
+Rede Neurais no matab.pdf				annbbpso.py						y_treinamento.txt
+Relatório.pages						sofm_src.zip
+Relatório.pdf						technical report - neural networks.pdf
+macthome:Artificial Neural Networks mthome$ ../
+.git/                                              BasesDeDados/                                      Genetic Algorithm/
+Ants Colony Optimization/                          Evolutionary Computing and Differential Evolution/ Particle Swarm Optimization/
+Artificial Neural Networks/                        Fuzzy Logics/                                      Task 1/
+macthome:Artificial Neural Networks mthome$ ls
+Convergence.png						SIG- AULA 9-RNA-introd.pdf				test.py
+Function.png						SIG- AULA 9_RNA_Perceptron - 2.pdf			x_teste.txt
+NC-Exercicio computacional - redes neurais - 2017-2.pdf	Tutorial RNA MATLAB.pdf					x_treinamento.txt
+Rede Neurais no matab.pdf				annbbpso.py						y_treinamento.txt
+Relatório.pages						sofm_src.zip
+Relatório.pdf						technical report - neural networks.pdf
+macthome:Artificial Neural Networks mthome$ ./annbbpso.py
+Usage: ./annbbpso x_training y_training x_test hidden_neurons
+0.1874342785738417
+0.09595772060218913
+0.1706387627066223
+0.10178129615213488
+0.1147612286053943
+0.19304372489761792
+0.18026367155364903
+0.2709045606016234
+^CTraceback (most recent call last):
+  File "./annbbpso.py", line 123, in <module>
+    main('x_treinamento.txt','y_treinamento.txt','x_teste.txt',10,False)
+  File "./annbbpso.py", line 99, in main
+    (bind,convergence) = bbpso(160,40,nhid,makeevalerr(inp1,inp2))
+  File "./annbbpso.py", line 81, in bbpso
+    j.evaluate(fun)
+  File "./annbbpso.py", line 34, in evaluate
+    aux = fun(self.evaluation)
+  File "./annbbpso.py", line 17, in evalerr
+    v = fun(inp1[i])
+  File "./annbbpso.py", line 50, in ffn
+    def ffn(ivalue):
+KeyboardInterrupt
+macthome:Artificial Neural Networks mthome$ ./annbbpso.py
+Usage: ./annbbpso x_training y_training x_test hidden_neurons
+0.1423280870594666
+0.08360145448923147
+0.20182874292773445
+0.0836598643335071
+0.1088506023025164
+0.1223482195528669
+0.18311137532883032
+0.1010426808606052
+0.07266690701507568
+0.07971892225683276
+0.09412344304867244
+0.1418601762175047
+0.10260499039643453
+0.09497814832071193
+0.20260699031510956
+0.16428713815153723
+0.16390565400368348
+0.10289926988512395
+0.1127007103168551
+0.07528842078556722
+objc[26080]: Class FIFinderSyncExtensionHost is implemented in both /System/Library/PrivateFrameworks/FinderKit.framework/Versions/A/FinderKit (0x7fff8c062b68) and /System/Library/PrivateFrameworks/FileProvider.framework/OverrideBundles/FinderSyncCollaborationFileProviderOverride.bundle/Contents/MacOS/FinderSyncCollaborationFileProviderOverride (0x1137a0cd8). One of the two will be used. Which one is undefined.
+[[(2.7512463324902265, 1.8837357528215888), (1.4457628282514587, 0.4999341616334666), (3.471599516706605, -6780.141557977149), (2.7412971010070475, 0.13014938601826617), (0.729332057417595, 0.5004950670457393), (0.36421473828396556, -0.6183403065263566), (-165.4604042046767, 0.3005635352359843), (3.266782038338717, 0.6074552198309453), (-1.4334468646189056, 6.230789935175046), (0.5923459992376398, 1.6175941366556374)], [0.33697649749259573, -0.17133241495092846, -1.0474205826780836, -0.0895820755702092, -0.5389356468438531, 0.877807689106385, 0.18980266072546578, -3.495908364096721, 0.42276417065397304, 0.9110319467424997, 3.5327883864910077]]
+macthome:Artificial Neural Networks mthome$ 
